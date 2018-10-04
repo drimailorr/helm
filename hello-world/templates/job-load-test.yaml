@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: loadtest
+spec:
+  template:
+    spec:
+      containers:
+      - name: siege
+        image: dockersec/siege
+        args: ["--concurrent=5", "--benchmark", "--time=10m", "http://hello-world"]
+      restartPolicy: Never
+  completions: 2
+  parallelism: 1
