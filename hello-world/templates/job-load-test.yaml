@@ -1,14 +1,27 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: loadtest
+  name: siege
 spec:
   template:
     spec:
       containers:
       - name: siege
-        image: dockersec/siege
-        args: ["--concurrent=5", "--benchmark", "--time=10m", "http://hello-world"]
+        image: sudermanjr/siege:4.0.4
+        env:
+        - name: URL
+          value: "http://hello-world"
+        - name: TIMEOUT
+          value: "60"
+        - name: PARSER
+          value: "false"
+        - name: CONCURRENT
+          value: "50"
+        - name: LIMIT
+          value: "10000"
+        - name: TIME
+          value: "10m"
       restartPolicy: Never
-  completions: 2
-  parallelism: 1
+  backoffLimit: 1
+  parallelism: 10
+  completions: 10
